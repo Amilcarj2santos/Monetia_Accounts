@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.DS_Store
+*_RESULTADO.xlsx
+*_CONCILIADO.xlsx
+.streamlit/secrets.toml
