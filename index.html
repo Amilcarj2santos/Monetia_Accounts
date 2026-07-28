@@ -46,7 +46,7 @@ window.__hideBoot=function(){ if(window.__bootDone) return; window.__bootDone=1;
 <style>
   :root{
     --bg:#eff0f2; --card:#fafbfc; --ink:#1e2837; --muted:#6b7688; --faint:#98a1b0;
-    --line:rgba(30,40,55,.15); --accent:#b1b7be; --accent-ink:#798697;
+    --line:rgba(30,40,55,.15); --accent:#b1b7be; --accent-ink:#3d4654;
     --pos:#16a34a; --neg:#dc2626;
     --chip:#e9ebee; --hoverchip:#e2e5e9; --thbg:#edeff2; --dropbg:#fafbfc;
     --ok-bg:#eef6f0; --no-bg:#fbf0ee; --ok-ink:#16a34a; --no-ink:#dc2626;
@@ -85,11 +85,11 @@ window.__hideBoot=function(){ if(window.__bootDone) return; window.__bootDone=1;
   .card.closed .sec-body{display:none}
   .card.closed .sec-head{border-bottom:none;margin-bottom:0;padding-bottom:0}
   .card.closed .sec-head .chev{transform:rotate(-90deg)}
-  .drop{border:1.5px dashed var(--line);border-radius:10px;padding:22px;text-align:center;cursor:pointer;
-    transition:.15s;background:var(--dropbg)}
-  .drop:hover,.drop.hover{border-color:var(--accent-ink);background:#f4f5f7}
+  .drop{border:1.5px dashed #2f7ff0;border-radius:10px;padding:22px;text-align:center;cursor:pointer;
+    transition:.15s;background:#fbfdff}
+  .drop:hover,.drop.hover{border-color:#1a66d9;background:#f0f6ff}
   .drop .big{font-size:0;color:var(--faint)}
-  .drop b{color:var(--ink)}
+  .drop b{color:#2f7ff0}
   .drop .sub{font-size:12px;color:var(--muted);margin-top:6px}
   .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
   .btn{background:var(--accent-grad,var(--accent));color:var(--accent-ink);border:none;border-radius:10px;padding:8px 14px;
@@ -101,9 +101,11 @@ window.__hideBoot=function(){ if(window.__bootDone) return; window.__bootDone=1;
   .btn:disabled{opacity:.5;cursor:not-allowed}
   select{padding:7px 10px;border:.8px solid var(--line);border-radius:10px;background:var(--card);
     font-size:13px;color:var(--ink);font-family:var(--f-text);height:34px}
-  .fld{display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--muted);font-weight:600}
+  .fld{display:flex;flex-direction:column;gap:5px;font-size:12px;color:var(--muted);font-weight:600;cursor:help}
+  .fld-l{display:inline-flex;align-items:center;gap:5px}
+  .info-ic{color:var(--faint);flex:0 0 auto}
   .dd{position:relative}
-  .dd-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:175px;height:34px;
+  .dd-btn{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:112px;height:34px;
     padding:0 11px;border:.8px solid var(--line);border-radius:10px;background:var(--card);cursor:pointer;
     font-family:var(--f-num);font-size:12.5px;font-weight:600;color:var(--ink);transition:.15s}
   .dd-btn:hover{border-color:var(--accent)}
@@ -135,8 +137,8 @@ window.__hideBoot=function(){ if(window.__bootDone) return; window.__bootDone=1;
     letter-spacing:.4px;color:var(--muted);font-weight:700}
   tr.ok td{background:var(--ok-bg)}
   tr.no td{background:var(--no-bg)}
-  .mono{font-family:var(--f-num);font-weight:600;text-align:left}
-  td{text-align:left}
+  .mono{font-family:var(--f-num);font-weight:600}
+  td.tnum{text-align:right}
   .pill{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--ink)}
   .pill::before{content:"";width:8px;height:8px;border-radius:50%;display:inline-block}
   .pill.ok::before{background:var(--pos)}
@@ -206,7 +208,7 @@ window.__hideBoot=function(){ if(window.__bootDone) return; window.__bootDone=1;
     .metrics{grid-template-columns:repeat(2,1fr)}
     .hero h1{font-size:17px}
     .row{gap:8px}
-    .dd-btn{min-width:150px}
+    .dd-btn{min-width:104px}
     .card{padding:15px}
     th,td{padding:6px 8px}
   }
@@ -249,9 +251,9 @@ window.__hideBoot=function(){ if(window.__bootDone) return; window.__bootDone=1;
     </div>
     <div id="progress" class="progress hidden"><span class="spin"></span><span id="progress-txt"></span></div>
     </div>
-    <div class="row" style="margin-top:12px;justify-content:space-between">
+    <div class="row" style="margin-top:12px;justify-content:space-between;align-items:flex-end">
       <div class="row">
-        <div class="fld" title="Diferença máxima que a app aceita para considerar que um grupo 'soma zero'. Útil para pequenos descuadres por arredondamento ou cêntimos."><span data-i18n="lblTol">Tolerância (diferença aceite)</span>
+        <div class="fld" title="Diferença máxima que a app aceita para considerar que um grupo 'soma zero'. Útil para pequenos descuadres por arredondamento ou cêntimos."><span class="fld-l"><span data-i18n="lblTol">Tolerância</span><svg class="info-ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
           <select id="tol">
             <option value="0" data-i18n="optExact">Exato (0,00 €)</option>
             <option value="1" selected>± 0,01 €</option>
@@ -266,7 +268,7 @@ window.__hideBoot=function(){ if(window.__bootDone) return; window.__bootDone=1;
             <option value="500">± 5,00 €</option>
           </select>
         </div>
-        <div class="fld" title="Quantas linhas (faturas, pagamentos, notas de crédito) a app pode somar em conjunto para dar zero. Ex.: 1 fatura paga com 3 pagamentos = 4 linhas."><span data-i18n="lblMax">Máx. de linhas combinadas por conciliação</span>
+        <div class="fld" title="Quantas linhas (faturas, pagamentos, notas de crédito) a app pode somar em conjunto para dar zero. Ex.: 1 fatura paga com 3 pagamentos = 4 linhas."><span class="fld-l"><span data-i18n="lblMax">Linhas por grupo</span><svg class="info-ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg></span>
           <select id="maxg">
             <option>2</option><option>3</option><option>4</option><option selected>5</option>
             <option>6</option><option>7</option><option>8</option><option>9</option><option>10</option>
@@ -354,7 +356,7 @@ const I18N={
   heroText:"Carrega o teu Excel e a app encontra as linhas cujo <b>DEB_CRED</b> soma zero (fatura + pagamento, notas de crédito, um pagamento de várias faturas) e marca as que ficam soltas. Tudo corre no teu navegador — nenhum ficheiro sai do teu computador.",
   dropMain:"Arrasta ou <b>carrega o teu ficheiro</b> (Excel ou CSV)",
   dropSub:"Aceita .xlsx · .xlsm · .xlsb · .xls · .csv · .ods &nbsp;|&nbsp; precisas das colunas <b>DATA_CERTA</b> e <b>DEB_CRED</b> — vê as <b>Instruções</b>.",
-  lblTol:"Tolerância (diferença aceite)", lblMax:"Máx. de linhas combinadas por conciliação",
+  lblTol:"Tolerância", lblMax:"Linhas por grupo",
   optExact:"Exato (0,00 €)", btnDemo:ICON.play+" Ver exemplo", btnReset:ICON.refresh+" Atualizar dados", btnDemoHide:ICON.x+" Ocultar exemplo", btnDownload:ICON.download+" Descarregar Excel conciliado",
   mTotal:"Linhas totais", mOk:"Conciliadas <span class='dot g'></span>", mNo:"Soltas <span class='dot o'></span>", mSaldo:"Saldo em aberto",
   tabAll:ICON.list+" Tudo", tabLoose:ICON.xc+" Soltas (saldo)", tabGroups:ICON.link+" Grupos",
@@ -386,7 +388,7 @@ const I18N={
   heroText:"Upload your Excel and the app finds the lines whose <b>DEB_CRED</b> sums to zero (invoice + payment, credit notes, one payment settling several invoices) and flags the unmatched ones. Everything runs in your browser — no file ever leaves your computer.",
   dropMain:"Drag or <b>upload your file</b> (Excel or CSV)",
   dropSub:"Accepts .xlsx · .xlsm · .xlsb · .xls · .csv · .ods &nbsp;|&nbsp; you need the columns <b>DATA_CERTA</b> and <b>DEB_CRED</b> — see <b>Instructions</b>.",
-  lblTol:"Tolerance (accepted difference)", lblMax:"Max. lines combined per reconciliation",
+  lblTol:"Tolerance", lblMax:"Lines per group",
   optExact:"Exact (0.00 €)", btnDemo:ICON.play+" See example", btnReset:ICON.refresh+" Refresh data", btnDemoHide:ICON.x+" Hide example", btnDownload:ICON.download+" Download reconciled Excel",
   mTotal:"Total lines", mOk:"Reconciled <span class='dot g'></span>", mNo:"Unmatched <span class='dot o'></span>", mSaldo:"Open balance",
   tabAll:ICON.list+" All", tabLoose:ICON.xc+" Unmatched (balance)", tabGroups:ICON.link+" Groups",
@@ -418,7 +420,7 @@ const I18N={
   heroText:"Sube tu Excel y la app encuentra las líneas cuyo <b>DEB_CRED</b> suma cero (factura + pago, notas de crédito, un pago que salda varias facturas) y marca las que quedan sueltas. Todo corre en tu navegador — ningún fichero sale de tu ordenador.",
   dropMain:"Arrastra o <b>sube tu fichero</b> (Excel o CSV)",
   dropSub:"Acepta .xlsx · .xlsm · .xlsb · .xls · .csv · .ods &nbsp;|&nbsp; necesitas las columnas <b>DATA_CERTA</b> y <b>DEB_CRED</b> — ver <b>Instrucciones</b>.",
-  lblTol:"Tolerancia (diferencia aceptada)", lblMax:"Máx. de líneas combinadas por conciliación",
+  lblTol:"Tolerancia", lblMax:"Líneas por grupo",
   optExact:"Exacto (0,00 €)", btnDemo:ICON.play+" Ver ejemplo", btnReset:ICON.refresh+" Refrescar datos", btnDemoHide:ICON.x+" Ocultar ejemplo", btnDownload:ICON.download+" Descargar Excel conciliado",
   mTotal:"Líneas totales", mOk:"Conciliadas <span class='dot g'></span>", mNo:"Sueltas <span class='dot o'></span>", mSaldo:"Saldo abierto",
   tabAll:ICON.list+" Todo", tabLoose:ICON.xc+" Sueltas (saldo)", tabGroups:ICON.link+" Grupos",
@@ -772,13 +774,13 @@ function render(){
       if(onlyLoose && a.conc) continue;
       html+=`<tr class="${a.conc?"ok":"no"}">`;
       for(let i=0;i<cols.length;i++){
-        let v=rowArr[i];
+        let v=rowArr[i], cls="";
         if(v instanceof Date) v=v.toLocaleDateString("pt-PT");
         else if(typeof v==="number"){
           const s=(moneyCols.has(i)||!Number.isInteger(v))?fmtMoney(v):String(v);
-          v=`<span class="mono">${s}</span>`;
+          v=`<span class="mono">${s}</span>`; cls=' class="tnum"';
         }
-        html+=`<td>${v==null?"":v}</td>`;
+        html+=`<td${cls}>${v==null?"":v}</td>`;
       }
       html+=`<td><span class="pill ${a.conc?"ok":"no"}">${a.conc?t("pillTrue"):t("pillFalse")}</span></td>`;
       html+=`<td class="ref">${a.ref}</td></tr>`;
@@ -1025,10 +1027,16 @@ function initStylePanel(){
       return Math.round(255*c).toString(16).padStart(2,"0");};
     return "#"+f(0)+f(8)+f(4);
   }
-  const DEF={hex:"#b1b7be",clar:50,grad:0,text:48};
+  const DEF={hex:"#b1b7be",clar:50,grad:0,text:18};
   let STY={base:hexToHsl(DEF.hex),clar:DEF.clar,grad:DEF.grad,text:DEF.text};
   const $=id=>document.getElementById(id);
   const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+  // contraste automatico: fondo claro -> letras oscuras; fondo oscuro -> letras claras
+  function syncAutoText(){
+    const l=clamp(STY.base.l+(STY.clar-50)*0.5,8,94);
+    STY.text = l>=58 ? 18 : 92;
+    const sl=$("sty-text"); if(sl) sl.value=STY.text;
+  }
 
   function aplicar(){
     const {h,s}=STY.base;
@@ -1037,7 +1045,7 @@ function initStylePanel(){
     const grad = STY.grad>0
       ? `linear-gradient(180deg, ${hslToHex(h,s,clamp(l+STY.grad*0.28,l,97))}, ${acc})`
       : acc;
-    const tL=clamp(12+STY.text*0.86,8,98);
+    const tL=clamp(10+STY.text*0.90,8,98);
     const ink=hslToHex(h,Math.min(s,22),tL);
     const rs=document.documentElement.style;
     rs.setProperty("--accent",acc);
@@ -1057,7 +1065,7 @@ function initStylePanel(){
       const d=document.createElement("div");
       d.className="sty-sw"+(Math.abs(L-STY.base.l)<5?" sel":"");
       d.style.background=hslToHex(h,s,L);
-      d.addEventListener("click",()=>{STY.base.l=L;aplicar();});
+      d.addEventListener("click",()=>{STY.base.l=L;syncAutoText();aplicar();});
       box.appendChild(d);
     });
   }
@@ -1065,16 +1073,16 @@ function initStylePanel(){
   PAL.forEach(hex=>{
     const d=document.createElement("div");
     d.className="sty-sw"; d.style.background=hex; d.title=hex;
-    d.addEventListener("click",()=>{STY.base=hexToHsl(hex);aplicar();});
+    d.addEventListener("click",()=>{STY.base=hexToHsl(hex);syncAutoText();aplicar();});
     grid.appendChild(d);
   });
-  $("sty-clar").addEventListener("input",e=>{STY.clar=+e.target.value;aplicar();});
+  $("sty-clar").addEventListener("input",e=>{STY.clar=+e.target.value;syncAutoText();aplicar();});
   $("sty-grad").addEventListener("input",e=>{STY.grad=+e.target.value;aplicar();});
   $("sty-text").addEventListener("input",e=>{STY.text=+e.target.value;aplicar();});
   $("sty-reset").addEventListener("click",()=>{
     STY={base:hexToHsl(DEF.hex),clar:DEF.clar,grad:DEF.grad,text:DEF.text};
-    $("sty-clar").value=DEF.clar; $("sty-grad").value=DEF.grad; $("sty-text").value=DEF.text;
-    aplicar();
+    $("sty-clar").value=DEF.clar; $("sty-grad").value=DEF.grad;
+    syncAutoText(); aplicar();
   });
   const ov=$("overlay-style");
   $("btn-style").addEventListener("click",()=>{ov.classList.remove("hidden");aplicar();});
