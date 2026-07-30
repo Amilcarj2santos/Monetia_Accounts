@@ -558,7 +558,7 @@ const I18N={
   step2:"Se o teu ficheiro vem de um sistema de contabilidade, escolhe-o no seletor <b>Sistema</b> (<b>CentralGest</b> ou <b>Business Central PT</b>) e a app assume sozinha os nomes das colunas. Em <b>Genérico</b>, o teu Excel tem de cumprir <b>dois requisitos</b>:",
   calloutA:ICON.cal+" A coluna das <b>datas</b> tem de se chamar exatamente <code>DATA_CERTA</code>.<div class='muted' style='margin-top:6px'>A ordem das colunas pode ser qualquer — a app procura-a pelo nome.</div>",
   calloutB:ICON.money+" Os valores podem vir de <b>duas formas</b> (escolhes no seletor <b>Valores</b>):<div style='margin-top:8px'><b>A) Uma coluna</b> <code>DEB_CRED</code> com tudo:<br>• <b>débito</b> com sinal <span class='plus'>positivo (+)</span> &nbsp;→&nbsp; ex.: <b>992,63</b><br>• <b>crédito</b> com sinal <span class='minus'>negativo (−)</span> &nbsp;→&nbsp; ex.: <b>−992,63</b></div><div style='margin-top:8px'><b>B) Duas colunas</b> <code>DEBITO</code> e <code>CREDITO</code>, ambas com os valores em positivo — a app calcula <b>DEBITO − CREDITO</b> (débitos +, créditos −).</div>",
-  step3:"A app procura as linhas cujo <b>DEB_CRED soma zero</b> e marca-as como conciliadas. As que não casam ficam <b>SEM IDENTIFICAR</b> e formam o saldo em aberto.",
+  step3:"Primeiro a app verifica se o <b>saldo da conta</b> é a soma de algumas das <b>linhas mais recentes</b>; se for, essas ficam como <b>SALDO EM ABERTO</b> e o resto soma zero. A app procura as linhas cujo <b>DEB_CRED soma zero</b> e marca-as como conciliadas. As que não casam ficam <b>SEM IDENTIFICAR</b> e formam o saldo em aberto.",
   step4:"Descarrega o <b>Excel conciliado</b>, já com as colunas <b>CONCILIADO</b> (VERDADEIRO/FALSO) e <b>INFORMAÇÃO</b> (Referência 001, 002…).",
   step5:"Podes carregar <b>vários ficheiros de uma vez</b> — a descarga junta tudo num só Excel, com <b>uma folha por ficheiro</b>. O que conta é o <b>total de linhas</b>: até <b>~20.000 linhas</b> somadas é imediato; até <b>~50.000</b> funciona com uma espera de alguns segundos.",
   manual:`<div class="manual">
@@ -679,7 +679,7 @@ const I18N={
   procSheet:"A processar folha {i}/{n}", genExcel:"A gerar o Excel…",
   bigWarn:"⚠ {l} linhas — gerar o Excel pode demorar cerca de {s} segundos.",
   outConc:"CONCILIADO", outInfo:"INFORMAÇÃO", outTrue:"VERDADEIRO", outFalse:"FALSO",
-  outRef:"Referência", outNoId:"SEM IDENTIFICAR", outDif:"Dif", outIndex:"Indice", outIdxSheet:"FOLHA",
+  outRef:"Referência", outNoId:"SEM IDENTIFICAR", outSaldo:"SALDO EM ABERTO", outDif:"Dif", outIndex:"Indice", outIdxSheet:"FOLHA",
   lblIndex:"Folha Índice",
   secUpload:"Carregar ficheiros", secResumo:"Resumo", secDetalhe:"Detalhe",
   thGraf:"Grafite", thAzul:"Azul", thEsc:"Escuro",
@@ -702,7 +702,7 @@ const I18N={
   step2:"If your file comes from an accounting system, pick it in the <b>System</b> selector (<b>CentralGest</b> or <b>Business Central PT</b>) and the app assumes the column names for you. In <b>Generic</b> mode, your Excel must meet <b>two column requirements</b>:",
   calloutA:ICON.cal+" The <b>date</b> column must be named exactly <code>DATA_CERTA</code>.<div class='muted' style='margin-top:6px'>Column order doesn't matter — the app finds it by name.</div>",
   calloutB:ICON.money+" Amounts can come in <b>two ways</b> (pick it in the <b>Amounts</b> selector):<div style='margin-top:8px'><b>A) One column</b> <code>DEB_CRED</code> with everything:<br>• <b>debit</b> with a <span class='plus'>positive (+)</span> sign &nbsp;→&nbsp; e.g. <b>992.63</b><br>• <b>credit</b> with a <span class='minus'>negative (−)</span> sign &nbsp;→&nbsp; e.g. <b>−992.63</b></div><div style='margin-top:8px'><b>B) Two columns</b> <code>DEBITO</code> and <code>CREDITO</code>, both with positive values — the app computes <b>DEBITO − CREDITO</b> (debits +, credits −).</div>",
-  step3:"The app searches for lines whose <b>DEB_CRED sums to zero</b> and marks them as reconciled. Those that don't match stay as <b>SEM IDENTIFICAR</b> and form the open balance.",
+  step3:"First the app checks whether the <b>account balance</b> is the sum of some of the <b>most recent lines</b>; if it is, those are marked <b>OPEN BALANCE</b> and the rest sums to zero. The app searches for lines whose <b>DEB_CRED sums to zero</b> and marks them as reconciled. Those that don't match stay as <b>SEM IDENTIFICAR</b> and form the open balance.",
   step4:"Download the <b>reconciled Excel</b>, with the <b>CONCILIADO</b> (TRUE/FALSE) and <b>INFORMAÇÃO</b> (Referência 001, 002…) columns added.",
   step5:"You can load <b>several files at once</b> — the download merges everything into a single Excel with <b>one sheet per file</b>. What matters is the <b>total number of lines</b>: up to <b>~20,000 lines</b> combined is instant; up to <b>~50,000</b> works with a few seconds' wait.",
   manual:`<div class="manual">
@@ -823,7 +823,7 @@ const I18N={
   procSheet:"Processing sheet {i}/{n}", genExcel:"Generating the Excel…",
   bigWarn:"⚠ {l} lines — generating the Excel may take around {s} seconds.",
   outConc:"RECONCILED", outInfo:"INFORMATION", outTrue:"TRUE", outFalse:"FALSE",
-  outRef:"Reference", outNoId:"UNMATCHED", outDif:"Diff", outIndex:"Index", outIdxSheet:"SHEET",
+  outRef:"Reference", outNoId:"UNMATCHED", outSaldo:"OPEN BALANCE", outDif:"Diff", outIndex:"Index", outIdxSheet:"SHEET",
   lblIndex:"Index sheet",
   secUpload:"Load files", secResumo:"Summary", secDetalhe:"Detail",
   thGraf:"Graphite", thAzul:"Blue", thEsc:"Dark",
@@ -846,7 +846,7 @@ const I18N={
   step2:"Si tu fichero viene de un sistema de contabilidad, elígelo en el selector <b>Sistema</b> (<b>CentralGest</b> o <b>Business Central PT</b>) y la app asume sola los nombres de las columnas. En <b>Genérico</b>, tu Excel debe cumplir <b>dos requisitos</b>:",
   calloutA:ICON.cal+" La columna de <b>fechas</b> debe llamarse exactamente <code>DATA_CERTA</code>.<div class='muted' style='margin-top:6px'>El orden de las columnas da igual — la app la busca por el nombre.</div>",
   calloutB:ICON.money+" Los valores pueden venir de <b>dos formas</b> (lo eliges en el selector <b>Valores</b>):<div style='margin-top:8px'><b>A) Una columna</b> <code>DEB_CRED</code> con todo:<br>• <b>débito</b> con signo <span class='plus'>positivo (+)</span> &nbsp;→&nbsp; ej.: <b>992,63</b><br>• <b>crédito</b> con signo <span class='minus'>negativo (−)</span> &nbsp;→&nbsp; ej.: <b>−992,63</b></div><div style='margin-top:8px'><b>B) Dos columnas</b> <code>DEBITO</code> y <code>CREDITO</code>, ambas con los valores en positivo — la app calcula <b>DEBITO − CREDITO</b> (débitos +, créditos −).</div>",
-  step3:"La app busca las líneas cuyo <b>DEB_CRED suma cero</b> y las marca como conciliadas. Las que no casan quedan como <b>SEM IDENTIFICAR</b> y forman el saldo abierto.",
+  step3:"Primero la app comprueba si el <b>saldo de la cuenta</b> es la suma de algunas de las <b>líneas más recientes</b>; si lo es, esas quedan como <b>SALDO ABIERTO</b> y el resto suma cero. La app busca las líneas cuyo <b>DEB_CRED suma cero</b> y las marca como conciliadas. Las que no casan quedan como <b>SEM IDENTIFICAR</b> y forman el saldo abierto.",
   step4:"Descarga el <b>Excel conciliado</b>, ya con las columnas <b>CONCILIADO</b> (VERDADERO/FALSO) e <b>INFORMAÇÃO</b> (Referência 001, 002…).",
   step5:"Puedes cargar <b>varios ficheros a la vez</b> — la descarga lo junta todo en un solo Excel con <b>una hoja por fichero</b>. Lo que cuenta es el <b>total de líneas</b>: hasta <b>~20.000 líneas</b> sumadas es inmediato; hasta <b>~50.000</b> funciona con una espera de unos segundos.",
   manual:`<div class="manual">
@@ -967,7 +967,7 @@ const I18N={
   procSheet:"Procesando hoja {i}/{n}", genExcel:"Generando el Excel…",
   bigWarn:"⚠ {l} líneas — generar el Excel puede tardar unos {s} segundos.",
   outConc:"CONCILIADO", outInfo:"INFORMACIÓN", outTrue:"VERDADERO", outFalse:"FALSO",
-  outRef:"Referencia", outNoId:"SIN IDENTIFICAR", outDif:"Dif", outIndex:"Indice", outIdxSheet:"HOJA",
+  outRef:"Referencia", outNoId:"SIN IDENTIFICAR", outSaldo:"SALDO ABIERTO", outDif:"Dif", outIndex:"Indice", outIdxSheet:"HOJA",
   lblIndex:"Hoja Índice",
   secUpload:"Cargar ficheros", secResumo:"Resumen", secDetalhe:"Detalle",
   thGraf:"Grafito", thAzul:"Azul", thEsc:"Oscuro",
@@ -979,6 +979,7 @@ function t(k){ return (I18N[LANG] && I18N[LANG][k]) || I18N.pt[k] || k; }
 function plain(k){ return String(t(k)).replace(/<[^>]*>/g,"").trim(); }
 // Texto da coluna INFORMAÇÃO, sempre no idioma escolhido
 function refTxt(a){
+  if(a&&a.saldo) return plain("outSaldo");
   if(!a||!a.conc) return plain("outNoId");
   let s=plain("outRef")+" "+String(a.n).padStart(3,"0");
   if(a.dif){
@@ -1085,6 +1086,42 @@ function conciliar(filas, cfg){
   for(const f of filas){ if(f.valor!=null && f.valor!==0) pend.set(f.row,f); }
   const grupos=[]; let gid=0;
 
+  // Fase 0: SALDO EM ABERTO nas linhas mais recentes.
+  // O saldo da conta é quase sempre a soma de algumas das últimas linhas
+  // (faturas ainda sem pagamento). Fixa-se PRIMEIRO: o resto soma zero por
+  // construção e passa pelo motor normal só para receber as referências.
+  // Exato ao cêntimo · janela das 40 linhas mais recentes · até 17 linhas.
+  // Empate: a janela mais curta e, dentro dela, as linhas mais recentes.
+  const SALDO_WIN=40, SALDO_MAX=17, SALDO_CAP=40000;
+  const saldoRows=new Set();
+  (function faseSaldo(){
+    const dnS=x=>x?x.getTime():0;
+    const act=[...pend.values()];
+    if(act.length<2) return;
+    const alvo=act.reduce((s,f)=>s+f.valor,0);       // saldo da conta em cêntimos
+    if(alvo===0) return;                             // conta saldada: nada a fixar
+    const ord=act.slice().sort((a,b)=>dnS(b.fecha)-dnS(a.fecha)||b.row-a.row).slice(0,SALDO_WIN);
+    // DP por soma, percorrendo da linha MAIS RECENTE para trás: a primeira vez
+    // que uma soma aparece é já com a janela mais curta possível.
+    let st=new Map([[0,{size:0,rank:-1,rsum:0,list:null}]]);
+    for(let i=0;i<ord.length;i++){
+      const f=ord[i], add=[];
+      for(const [s,x] of st){
+        if(x.size>=SALDO_MAX) continue;
+        add.push([s+f.valor,{size:x.size+1,rank:i,rsum:x.rsum+i,list:{idx:f.row,prev:x.list}}]);
+      }
+      for(const [s,c] of add){
+        const ex=st.get(s);
+        if(!ex||c.rank<ex.rank||(c.rank===ex.rank&&c.rsum<ex.rsum)) st.set(s,c);
+      }
+      if(st.has(alvo)) break;                        // janela mais curta encontrada
+      if(st.size>SALDO_CAP) break;                   // segurança: nunca bloquear
+    }
+    const hit=st.get(alvo);
+    if(hit) for(const r of reconstruir(hit.list)) saldoRows.add(r);
+  })();
+  for(const r of saldoRows) pend.delete(r);
+
   // Fase 1: 1:1 por importe oposto + data mais próxima.
   // Agrupa por magnitude para NÃO gerar todos os pares (evita esgotar a
   // memória quando há milhares de linhas com o mesmo valor). Só se comparam
@@ -1147,7 +1184,7 @@ function conciliar(filas, cfg){
 
   // atribuição + numeração de referências por ordem de aparição
   const asign=new Map();
-  for(const f of filas) asign.set(f.row,{conc:false,n:0,dif:0,grupo:null});
+  for(const f of filas) asign.set(f.row,{conc:false,n:0,dif:0,grupo:null,saldo:saldoRows.has(f.row)});
   grupos.sort((a,b)=>Math.min(...a.rows)-Math.min(...b.rows));
   const valMap=new Map(filas.map(f=>[f.row,f.valor||0]));
   grupos.forEach((g,i)=>{
@@ -1160,7 +1197,7 @@ function conciliar(filas, cfg){
   const total=filas.length;
   const ok=[...asign.values()].filter(a=>a.conc).length;
   let saldo=0; for(const f of filas){ if(f.valor && !asign.get(f.row).conc) saldo+=f.valor; }
-  return {asign,grupos,resumen:{total,ok,no:total-ok,grupos:grupos.length,saldo}};
+  return {asign,grupos,resumen:{total,ok,no:total-ok,grupos:grupos.length,saldo,saldoLinhas:saldoRows.size}};
 }
 // Reconstrói a lista de linhas a partir de uma lista ligada imutável.
 function reconstruir(list){const o=[];while(list){o.push(list.idx);list=list.prev;}return o;}
