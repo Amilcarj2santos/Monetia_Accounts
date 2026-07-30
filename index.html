@@ -648,7 +648,7 @@ const I18N={
   detected:"Colunas detetadas — importes: {v} · data: {f} · cabeçalho na linha {r}",
   warnBig:ICON.alert+" ficheiro muito grande: algumas conciliações complexas podem não ter sido procuradas",
   errNoCol:"Não encontrei a coluna de importes 'DEB_CRED'. Verifica o cabeçalho do Excel (vê as Instruções).",
-  grpType1:"fatura+pagamento (1:1)", grpTypeN:"pagamento de várias faturas",
+  grpType1:"fatura+pagamento (1:1)", grpTypeN:"pagamento de várias faturas", grpTypeR:"resto que se anula entre si",
   grpRows:"linhas Excel", grpEmpty:"Sem grupos conciliados.",
   pillTrue:"VERDADEIRO", pillFalse:"FALSO",
   processing:"A processar {i}/{n}",
@@ -792,7 +792,7 @@ const I18N={
   detected:"Detected columns — amounts: {v} · date: {f} · header on row {r}",
   warnBig:ICON.alert+" very large file: some complex reconciliations may not have been searched",
   errNoCol:"Couldn't find the amounts column 'DEB_CRED'. Check your Excel header (see Instructions).",
-  grpType1:"invoice+payment (1:1)", grpTypeN:"one payment, several invoices",
+  grpType1:"invoice+payment (1:1)", grpTypeN:"one payment, several invoices", grpTypeR:"remainder that cancels out",
   grpRows:"Excel rows", grpEmpty:"No reconciled groups.",
   pillTrue:"TRUE", pillFalse:"FALSE",
   processing:"Processing {i}/{n}",
@@ -936,7 +936,7 @@ const I18N={
   detected:"Columnas detectadas — importes: {v} · fecha: {f} · cabecera en la fila {r}",
   warnBig:ICON.alert+" fichero muy grande: algunas conciliaciones complejas pueden no haberse buscado",
   errNoCol:"No encontré la columna de importes 'DEB_CRED'. Revisa la cabecera de tu Excel (ver Instrucciones).",
-  grpType1:"factura+pago (1:1)", grpTypeN:"un pago, varias facturas",
+  grpType1:"factura+pago (1:1)", grpTypeN:"un pago, varias facturas", grpTypeR:"resto que se anula entre sí",
   grpRows:"filas Excel", grpEmpty:"Sin grupos conciliados.",
   pillTrue:"VERDADERO", pillFalse:"FALSO",
   processing:"Procesando {i}/{n}",
@@ -1181,6 +1181,23 @@ function conciliar(filas, cfg){
     }
   }
   window.__budget_stopped = budget.stopped || budget.ops>budget.max;
+  // Fase 3: o RESTO em bloco. Depois de fixar o saldo (Fase 0), tudo o que
+  // sobra soma zero por construção. Às vezes o motor não o consegue repartir
+  // em grupos pequenos, porque uma linha antiga que faria falta já foi
+  // consumida por outro grupo. Em vez de deixar essas linhas SEM IDENTIFICAR
+  // — e mentir sobre o saldo em aberto — recebem UMA referência conjunta.
+  if(pend.size>1){
+    const vM=new Map(filas.map(f=>[f.row,f.valor||0]));
+    const drift=grupos.reduce((s,g)=>s+g.rows.reduce((a,r)=>a+(vM.get(r)||0),0),0);
+    const resto=[...pend.values()].reduce((s,f)=>s+f.valor,0);
+    const contaExplicada = saldoRows.size>0 || [...pend.values()].length===0;
+    if(contaExplicada && Math.abs(resto+drift)<=Math.max(tol,1)){
+      gid++;
+      grupos.push({id:gid,rows:[...pend.keys()],tipo:"resto que soma zero"});
+      pend.clear();
+    }
+  }
+
 
   // atribuição + numeração de referências por ordem de aparição
   const asign=new Map();
@@ -1585,7 +1602,8 @@ function render(){
   // grupos
   let g="";
   for(const grp of (resultado?resultado.grupos:[])){
-    const tipoTxt = grp.tipo==="fatura+pagamento (1:1)" ? t("grpType1") : t("grpTypeN");
+    const tipoTxt = grp.tipo==="fatura+pagamento (1:1)" ? t("grpType1")
+      : grp.tipo==="resto que soma zero" ? t("grpTypeR") : t("grpTypeN");
     g+=`<div class="grp"><div class="h">${refTxt({conc:true,n:grp.n,dif:grp.dif})}</div>
         <div class="muted">${tipoTxt} · ${t("grpRows")} ${grp.rows.map(x=>x+1).join(", ")}</div></div>`;
   }
