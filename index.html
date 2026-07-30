@@ -1090,9 +1090,13 @@ function conciliar(filas, cfg){
   // O saldo da conta é quase sempre a soma de algumas das últimas linhas
   // (faturas ainda sem pagamento). Fixa-se PRIMEIRO: o resto soma zero por
   // construção e passa pelo motor normal só para receber as referências.
-  // Exato ao cêntimo · janela das 40 linhas mais recentes · até 17 linhas.
-  // Empate: a janela mais curta e, dentro dela, as linhas mais recentes.
-  const SALDO_WIN=40, SALDO_MAX=17, SALDO_CAP=40000;
+  // Exato ao cêntimo. Duas passagens, sempre a preferir a janela mais curta
+  // (as linhas mais recentes possíveis):
+  //   A) as 40 linhas mais recentes, grupos até 17 linhas — o caso normal.
+  //   B) as 400 linhas mais recentes, mas só 1, 2 ou 3 linhas — uma fatura
+  //      antiga pode continuar aberta muito depois de as seguintes já
+  //      estarem pagas; a essa distância só combinações curtas são credíveis.
+  const SALDO_WIN=40, SALDO_MAX=17, SALDO_WIDE=400, SALDO_CAP=60000;
   const saldoRows=new Set();
   // saldo da conta: soma de TODAS as linhas com valor. Zero = conta toda paga.
   const totalConta=[...pend.values()].reduce((s,f)=>s+f.valor,0);
@@ -1100,14 +1104,16 @@ function conciliar(filas, cfg){
     const dnS=x=>x?x.getTime():0;
     const act=[...pend.values()];
     if(act.length<2) return;
-    const alvo=totalConta;                           // saldo da conta em cêntimos
-    if(alvo===0) return;                             // conta saldada: nada a fixar (trata a Fase 3)
-    const ord=act.slice().sort((a,b)=>dnS(b.fecha)-dnS(a.fecha)||b.row-a.row).slice(0,SALDO_WIN);
-    // DP por soma, percorrendo da linha MAIS RECENTE para trás: a primeira vez
-    // que uma soma aparece é já com a janela mais curta possível.
+    const alvo=totalConta;
+    if(alvo===0) return;                             // conta saldada: trata a Fase 3
+    const ord=act.slice().sort((a,b)=>dnS(b.fecha)-dnS(a.fecha)||b.row-a.row);
+    let achado=null;
+    // A) DP por soma, da linha MAIS RECENTE para trás: a primeira vez que uma
+    //    soma aparece é já com a janela mais curta possível.
+    const win=ord.slice(0,SALDO_WIN);
     let st=new Map([[0,{size:0,rank:-1,rsum:0,list:null}]]);
-    for(let i=0;i<ord.length;i++){
-      const f=ord[i], add=[];
+    for(let i=0;i<win.length;i++){
+      const f=win[i], add=[];
       for(const [s,x] of st){
         if(x.size>=SALDO_MAX) continue;
         add.push([s+f.valor,{size:x.size+1,rank:i,rsum:x.rsum+i,list:{idx:f.row,prev:x.list}}]);
@@ -1119,8 +1125,26 @@ function conciliar(filas, cfg){
       if(st.has(alvo)) break;                        // janela mais curta encontrada
       if(st.size>SALDO_CAP) break;                   // segurança: nunca bloquear
     }
-    const hit=st.get(alvo);
-    if(hit) for(const r of reconstruir(hit.list)) saldoRows.add(r);
+    const h=st.get(alvo);
+    if(h) achado=reconstruir(h.list);
+    // B) janela larga, combinações curtas. Procura-se ANTES de indexar cada
+    //    linha, para que a linha encontrada seja sempre a mais recente possível.
+    if(!achado){
+      const wide=ord.slice(0,SALDO_WIDE);
+      const un=new Map();                            // valor -> linha mais recente
+      const par=new Map();                           // soma de duas -> [linha,linha]
+      for(let i=0;i<wide.length;i++){
+        const f=wide[i], v=f.valor;
+        if(v===alvo){ achado=[f.row]; break; }
+        const u=un.get(alvo-v);
+        if(u!==undefined){ achado=[f.row,u]; break; }
+        const pr=par.get(alvo-v);
+        if(pr){ achado=[f.row,pr[0],pr[1]]; break; }
+        for(const [w,r] of un){ const s=w+v; if(!par.has(s)) par.set(s,[r,f.row]); }
+        if(!un.has(v)) un.set(v,f.row);
+      }
+    }
+    if(achado) for(const r of achado) saldoRows.add(r);
   })();
   for(const r of saldoRows) pend.delete(r);
 
