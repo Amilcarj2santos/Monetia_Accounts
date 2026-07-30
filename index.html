@@ -1094,12 +1094,14 @@ function conciliar(filas, cfg){
   // Empate: a janela mais curta e, dentro dela, as linhas mais recentes.
   const SALDO_WIN=40, SALDO_MAX=17, SALDO_CAP=40000;
   const saldoRows=new Set();
+  // saldo da conta: soma de TODAS as linhas com valor. Zero = conta toda paga.
+  const totalConta=[...pend.values()].reduce((s,f)=>s+f.valor,0);
   (function faseSaldo(){
     const dnS=x=>x?x.getTime():0;
     const act=[...pend.values()];
     if(act.length<2) return;
-    const alvo=act.reduce((s,f)=>s+f.valor,0);       // saldo da conta em cêntimos
-    if(alvo===0) return;                             // conta saldada: nada a fixar
+    const alvo=totalConta;                           // saldo da conta em cêntimos
+    if(alvo===0) return;                             // conta saldada: nada a fixar (trata a Fase 3)
     const ord=act.slice().sort((a,b)=>dnS(b.fecha)-dnS(a.fecha)||b.row-a.row).slice(0,SALDO_WIN);
     // DP por soma, percorrendo da linha MAIS RECENTE para trás: a primeira vez
     // que uma soma aparece é já com a janela mais curta possível.
@@ -1190,7 +1192,9 @@ function conciliar(filas, cfg){
     const vM=new Map(filas.map(f=>[f.row,f.valor||0]));
     const drift=grupos.reduce((s,g)=>s+g.rows.reduce((a,r)=>a+(vM.get(r)||0),0),0);
     const resto=[...pend.values()].reduce((s,f)=>s+f.valor,0);
-    const contaExplicada = saldoRows.size>0 || [...pend.values()].length===0;
+    // A conta está explicada quando o saldo já foi fixado (Fase 0) OU quando o
+    // saldo é ZERO — nesse caso está tudo pago e não pode sobrar nada aberto.
+    const contaExplicada = saldoRows.size>0 || totalConta===0;
     if(contaExplicada && Math.abs(resto+drift)<=Math.max(tol,1)){
       gid++;
       grupos.push({id:gid,rows:[...pend.keys()],tipo:"resto que soma zero"});
